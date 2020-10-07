@@ -57,4 +57,3 @@ app.listen(PORT, (err) => {
     console.log("errot starting server on port:" + PORT);
   }
 });
-console.log("hello world");
