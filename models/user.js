@@ -17,6 +17,11 @@ let userSchema = new mongoose.Schema({
     type: String,
     require: true,
   },
+  phone: {
+    type: String,
+    minlength: 11,
+    maxlength: 11,
+  },
   emailConfirmed: {
     type: Boolean,
     required: false,
@@ -38,12 +43,8 @@ let userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  profilePicture: {
-    type: String,
-    required: false,
-  },
+  orders: [{ type: Number, ref: "Order" }],
 });
 
 let User = mongoose.model("User", userSchema);
 module.exports = User;
-

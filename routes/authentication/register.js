@@ -54,8 +54,9 @@ function Register(Model) {
           let hashedPassword = bcrypt.hashSync(req.body.password, salt);
           thisUser.password = hashedPassword;
           thisUser.email = req.body.email;
+          thisUser.phone = req.body.phone;
           thisUser.fullName = req.body.fullName;
-          // thisUser._id = Number(await Model.countDocuments());
+          thisUser._id = Number(await Model.countDocuments());
 
           req.user = await thisUser.save();
           let userToken = new TokenHandler();
@@ -76,4 +77,3 @@ function Register(Model) {
   };
 }
 module.exports = Register;
-

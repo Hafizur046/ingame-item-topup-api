@@ -6,8 +6,8 @@ function createPackage(Package) {
     package.game = req.body.game;
 
     //validating package
-    const validationError = package.validateSync().message;
-    if (validationError) {
+    if (package.validateSync()) {
+      const validationError = package.validateSync().message;
       return res.send(validationError);
     }
 

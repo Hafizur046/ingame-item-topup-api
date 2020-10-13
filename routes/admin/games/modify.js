@@ -1,15 +1,15 @@
 function modifyGame(Game) {
   return async (req, res) => {
-    const package = {};
+    const game = {};
 
     if (req.body.name) {
-      package.name = req.bod.name;
+      game.name = req.bod.name;
     }
     if (req.body.image) {
-      package.price = req.body.price;
+      game.price = req.body.price;
     }
 
-    Game.findByIdAndUpdate(req.body.id, package);
+    Game.findByIdAndUpdate(req.body.id, game);
     res.send("processing");
   };
 }
