@@ -12,7 +12,7 @@ function orderPackage(Order, User, IncreamentalId) {
     order._id = INC_ID;
 
     try {
-      let resOrder = order.save();
+      let resOrder = await order.save();
       res.send(
         await User.findByIdAndUpdate(req.User._id, {
           $push: { orders: resOrder._id },
