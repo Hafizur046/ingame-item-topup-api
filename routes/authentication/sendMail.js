@@ -1,33 +1,33 @@
 //configuring environment variables
-require('dotenv').config()
+require("dotenv").config();
 
-var nodemailer = require('nodemailer');
+var nodemailer = require("nodemailer");
 
 var transporter = nodemailer.createTransport({
-  service: 'gmail',
+  service: "gmail",
   auth: {
-    user: process.env['EMAIL'],
-    pass: process.env['PASSWORD']
-  }
+    user: process.env["EMAIL"],
+    pass: process.env["PASSWORD"],
+  },
 });
 
-;
-function sendMail(email, message, subject){
-  console.log('email:', email);
-  console.log('text:', message)
+function sendMail(email, message, subject) {
+  console.log("email:", email);
+  console.log("text:", message);
   var mailOptions = {
-    from: 'sopnorajjofoundation@gmail.com',
+    from: "sopnorajjofoundation@gmail.com",
     to: email,
     subject: subject,
-    text: String(message)
-  }
-  transporter.sendMail(mailOptions, function(error, info){
+    text: String(message),
+  };
+  transporter.sendMail(mailOptions, function (error, info) {
     if (error) {
       console.log(error);
     } else {
-      console.log('Email sent: ' + info.response);
+      console.log("Email sent: " + info.response);
     }
-  });  
+  });
 }
 
 module.exports = sendMail;
+
