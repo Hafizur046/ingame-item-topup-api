@@ -11,7 +11,8 @@ const packageSchema = new mongoose.Schema({
     required: true,
   },
   game: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Game",
     required: true,
   },
 });
