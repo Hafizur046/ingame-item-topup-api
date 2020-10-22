@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { text } = require("body-parser");
 
 const orderSchema = new mongoose.Schema({
   _id: {
@@ -7,6 +8,25 @@ const orderSchema = new mongoose.Schema({
   package: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Package",
+    required: true,
+  },
+  accountPlatform: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+  },
+  phone: {
+    type: String,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+  bkashNumber: {
+    type: String,
+    required: true,
   },
   orderedAt: {
     type: Date,
@@ -19,7 +39,7 @@ const orderSchema = new mongoose.Schema({
     required: false,
   },
   orderedBy: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Number,
     ref: "User",
   },
 });

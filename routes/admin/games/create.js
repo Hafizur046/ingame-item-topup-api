@@ -2,8 +2,7 @@ function createGame(Game) {
   return async (req, res) => {
     const game = new Game();
     game.name = req.body.name;
-    game.price = req.body.price;
-    game.game = req.body.game;
+    game.image = req.body.image;
 
     //validating game
     if (game.validateSync()) {

@@ -1,6 +1,7 @@
 function deleteGame(Game) {
   return async (req, res) => {
-    Game.findByIdAndDelete(req.params.id);
+    console.log(req.params.id);
+    await Game.findByIdAndDelete(req.params.id);
     res.send("deleted");
   };
 }

@@ -6,10 +6,10 @@ function modifyGame(Game) {
       game.name = req.bod.name;
     }
     if (req.body.image) {
-      game.price = req.body.price;
+      game.image = req.body.image;
     }
 
-    Game.findByIdAndUpdate(req.body.id, game);
+    Game.findByIdAndUpdate(req.params.id, game);
     res.send("processing");
   };
 }

@@ -5,7 +5,16 @@ function getOrders(Model) {
     let startIndex = (page - 1) * limit;
     let endIndex = startIndex + limit;
     let result = {};
-    // console.log('Page: ', page, 'Limit: ', limit, 'startIndex', startIndex, 'Endindex: ', endIndex)
+    console.log(
+      "Page: ",
+      page,
+      "Limit: ",
+      limit,
+      "startIndex",
+      startIndex,
+      "Endindex: ",
+      endIndex
+    );
 
     if (page > 1) {
       result.pre = {
@@ -25,28 +34,32 @@ function getOrders(Model) {
     }
     try {
       let searchStatus = req.query.status;
-      console.log("Searched Cat: ", searchStatus);
+      //console.log("Searched Cat: ", searchStatus);
+      console.log(result);
 
       if (req.query.status) {
-        res.result = {};
+        console.log("the status is ", req.query.status);
+        res.result = result;
         res.result.values = await Model.find({ status: req.query.status })
-          .sort({ dateUploaded: -1 })
+          //.sort({ dateUploaded: 1 })
+          .sort({ _id: -1 })
           .skip(startIndex)
           .limit(limit)
           .populate("package")
-          .exec()
-          .populate("package.game")
+          //.exec()
+          //.populate("package.game")
           .exec();
+        console.log(res.result);
         next();
       } else {
         res.result = {};
         res.result.values = await Model.find()
           .sort({ dateUploaded: -1 })
           .skip(startIndex)
-          .limit(limit)
+          //.limit(limit)
           .populate("package")
-          .exec()
-          .populate("package.game")
+          //.exec()
+          //.populate("package.game")
           .exec();
         next();
       }

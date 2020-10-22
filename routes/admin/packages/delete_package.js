@@ -1,6 +1,6 @@
 function deletePackage(Package) {
   return async (req, res) => {
-    Package.findByIdAndDelete(req.params.id);
+    await Package.findByIdAndDelete(req.params.id);
     res.send("deleted");
   };
 }

@@ -1,14 +1,18 @@
 function modifyOrder(Order) {
   return async (req, res) => {
-    if (!req.query.status || req.query.id) {
+    if (!req.query.status || req.params.id) {
       res.send("invalid");
     }
     if (!Order.findById(req.query.id)) {
       res.send("invalid");
     }
 
-    Order.findByIdAndUpdate(req.query.id, { status: req.query.status });
-    res.send("processing");
+    res.send(
+      await Order.findOneAndUpdate(
+        { _id: req.query.id },
+        { status: req.query.status }
+      )
+    );
   };
 }
 

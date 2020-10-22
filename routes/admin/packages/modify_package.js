@@ -9,7 +9,7 @@ function modifyPackage(Package) {
       package.price = req.body.price;
     }
 
-    Package.findByIdAndUpdate(req.body.id, package);
+    Package.findByIdAndUpdate(req.params.id, package);
     res.send("processing");
   };
 }
