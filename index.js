@@ -7,7 +7,7 @@ const bodyParser = require("body-parser");
 require("dotenv").config();
 
 //constants
-const PORT = 3000;
+const PORT = 80;
 const DB_URI = process.env["DB_URI"];
 
 //bug fixing
