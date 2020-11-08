@@ -8,14 +8,14 @@ function orderPackage(Order, User, IncreamentalId) {
     order.package = req.body.package;
     order.accountPlatform = req.body.accountPlatform;
     order.orderedBy = req.user._id;
-    order.email = req.body.email;
-    order.number = req.body.number;
+    //order.email = req.body.email;
+    order.emailOrNumber = req.body.emailOrNumber;
     order.password = req.body.password;
     order.bkashNumber = req.body.bkashNumber;
 
     //validation
     if (order.validateSync()) {
-      console.log("invalid");
+      console.log(order.validateSync());
       return res.send(order.validateSync());
     }
     //console.log("this should be the order id ", INC_ID);

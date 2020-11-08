@@ -17,12 +17,15 @@ authRoutes.post(
   Register(User),
   SendConfirmation(User),
   (req, res) => {
-    res.send("SUCCESS".toLowerCase());
+    res.json(req.user);
   }
 );
 
 //Login Route
-authRoutes.post("/login", Login(User));
+authRoutes.post("/login", Login(User), (req, res) => {
+  console.log(("The fucking user is :", req.user));
+  res.json({});
+});
 
 //Resend email Route
 authRoutes.get("/resend", SendConfirmation(User), (req, res) => {

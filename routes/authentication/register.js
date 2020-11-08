@@ -5,7 +5,6 @@ const bcrypt = require("bcryptjs");
 const TokenHandler = require("./TokenHandler.js");
 
 function isValid(user) {
-  // console.log(user)
   if (user.username) {
     if (user.email) {
       let parts = user.email.split("@");
@@ -16,11 +15,7 @@ function isValid(user) {
         user.email.split("").length < 50
       ) {
         if (user.password) {
-          if (user.fullName) {
-            return true;
-          } else {
-            return false;
-          }
+          return true;
         } else {
           return false;
         }
@@ -37,6 +32,7 @@ function isValid(user) {
 
 function Register(Model) {
   return async (req, res, next) => {
+    console.log(req.body);
     if (isValid(req.body)) {
       try {
         let user = await Model.find({
@@ -46,7 +42,7 @@ function Register(Model) {
         if (user.length > 0) {
           console.log("email or username is taken");
           console.log(user);
-          return res.send("Username or email is already taken");
+          return res.json({ err: "email or username is taken" });
         } else {
           let thisUser = new Model();
           thisUser.username = req.body.username;
@@ -63,16 +59,17 @@ function Register(Model) {
           let token = await userToken.getToken(req.user._id);
           res.setHeader("id", userToken.id);
           res.setHeader("key", userToken.key);
-          return next();
+          //return next();
+          res.json({ id: userToken.id, key: userToken.key });
         }
       } catch (error) {
         console.log(error);
         res.status(400);
-        res.send("Something went wrong");
+        res.json({ err: "Something went wrong" });
       }
     } else {
       // next();
-      return res.send("Provide all fields");
+      return res.json({ err: "Provide all fields" });
     }
   };
 }

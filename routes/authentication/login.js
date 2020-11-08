@@ -18,11 +18,18 @@ function isValidLoginInfo(user) {
 //Login middleware
 function Login(Model) {
   return async (req, res, next) => {
+    //res.json({ err: "no error" });
     //check if the req.body is valid
     if (isValidLoginInfo(req.body)) {
       try {
         //search for the username recieved the req.body object
         let user = await Model.findOne({ username: req.body.username });
+
+        if (!user) {
+          return res.json({
+            err: "Please Make sure The Username or password is correct",
+          });
+        }
 
         //compare the given password with the stored hashed password
         let validPassword = bcrypt.compareSync(
@@ -43,17 +50,26 @@ function Login(Model) {
           res.setHeader("id", userToken.id);
           res.setHeader("key", userToken.key);
 
+          res.cookie("cookieName", "hi there fucking user", {
+            maxAge: 900000,
+            httpOnly: true,
+          });
+
           //calling the next() callback
-          next();
+          //next();
+          res.json({ id: userToken.id, key: userToken.key });
         } else {
-          res.send("Password is not valid");
+          res.json({
+            err: "Please Make sure The Username or password is correct",
+          });
         }
       } catch (error) {
         console.log(error);
-        res.send("Ops something went wrong");
+        res.json({
+          err: "Ops something went wrong ",
+        });
       }
     }
   };
 }
 module.exports = Login;
-

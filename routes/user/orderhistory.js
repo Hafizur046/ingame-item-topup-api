@@ -37,18 +37,18 @@ function getOrderHistory(Model) {
           .exec()
           .populate("package.game")
           .exec();
-        next();
+        res.json(res.result);
       } else {
         res.result = {};
-        res.result.values = await Model.find({ orderedBy: req.User._id })
+        res.result.values = await Model.find({ orderedBy: req.user._id })
           .sort({ dateUploaded: -1 })
           .skip(startIndex)
           .limit(limit)
           .populate("package")
-          .exec()
           .populate("package.game")
           .exec();
-        next();
+
+        res.json(res.result);
       }
     } catch (errs) {
       console.log(errs);
