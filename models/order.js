@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const { text } = require("body-parser");
 
 const orderSchema = new mongoose.Schema({
   _id: {
@@ -10,16 +9,21 @@ const orderSchema = new mongoose.Schema({
     ref: "Package",
     required: true,
   },
+  playerId: {
+    type: String,
+    required: false,
+  },
   accountPlatform: {
     type: String,
-    required: true,
+    required: false,
   },
   emailOrNumber: {
     type: String,
+    required: false,
   },
   password: {
     type: String,
-    required: true,
+    required: false,
   },
   bkashNumber: {
     type: String,

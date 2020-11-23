@@ -3,14 +3,18 @@ function modifyGame(Game) {
     const game = {};
 
     if (req.body.name) {
-      game.name = req.bod.name;
+      game.name = req.body.name;
     }
     if (req.body.image) {
       game.image = req.body.image;
     }
 
-    Game.findByIdAndUpdate(req.params.id, game);
-    res.send("processing");
+    console.log("the name:", req.body.name);
+    console.log("the iamge:", req.body.image);
+    console.log("the id:", req.params.id);
+
+    await Game.updateOne({ _id: req.params.id }, game);
+    res.json({});
   };
 }
 

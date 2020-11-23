@@ -1,68 +1,45 @@
 function getOrders(Model) {
   return async (req, res, next) => {
+    //this route is a little bit different than others cause I tried to do things just a little differently
+    //here the data gets querried from the database than stored in req.result.values
+    //then I just call the next()
+
+    //setting some variables using the req datas
     let page = Number(req.query.page);
     let limit = Number(req.query.limit);
     let startIndex = (page - 1) * limit;
-    let endIndex = startIndex + limit;
-    let result = {};
-    console.log(
-      "Page: ",
-      page,
-      "Limit: ",
-      limit,
-      "startIndex",
-      startIndex,
-      "Endindex: ",
-      endIndex
-    );
 
-    if (page > 1) {
-      result.pre = {
-        page: page - 1,
-        limit: limit,
-      };
-    }
-    if (
-      (await Model.countDocuments({ status: req.query.status })) >
-      endIndex + 1
-    ) {
-      console.log((await Model.countDocuments()) + "why");
-      result.next = {
-        page: page + 1,
-        limit: limit,
-      };
-    }
+    //setting res.result as an empty object which is gonna store the values object
+    res.result = {};
     try {
-      let searchStatus = req.query.status;
-      //console.log("Searched Cat: ", searchStatus);
-      console.log(result);
+      //if req provides an id query than its served a array with only one object that is querried using the id
 
-      if (req.query.status) {
-        console.log("the status is ", req.query.status);
-        res.result = result;
-        res.result.values = await Model.find({ status: req.query.status })
-          //.sort({ dateUploaded: 1 })
-          .sort({ _id: -1 })
-          .skip(startIndex)
-          .limit(limit)
-          .populate("package")
-          //.exec()
-          //.populate("package.game")
-          .exec();
-        console.log(res.result);
-        next();
-      } else {
-        res.result = {};
-        res.result.values = await Model.find()
-          .sort({ dateUploaded: -1 })
-          .skip(startIndex)
-          //.limit(limit)
-          .populate("package")
-          //.exec()
-          //.populate("package.game")
-          .exec();
+      //warning
+      //warning
+      //warning
+      //this is a bodge
+      if (req.query.id) {
+        res.result.values = [await Model.findById(Number(req.query.id))];
+        res.result.total = 1;
         next();
       }
+
+      //checking if req provides req.query.status and setting the query used to query the database accordingly
+      let query = {};
+      if (req.query.status) {
+        query = { status: req.query.status };
+      }
+
+      //querring the database and storing the response in res.result.values
+      res.result.total = await Model.countDocuments(query);
+      res.result.values = await Model.find(query)
+        .sort({ orderedAt: -1 })
+        .skip(startIndex)
+        .limit(limit)
+        .populate("package")
+        .populate("orderedBy")
+        .exec();
+      next();
     } catch (errs) {
       console.log(errs);
     }

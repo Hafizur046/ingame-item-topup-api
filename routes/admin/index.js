@@ -15,6 +15,9 @@ const modifyGame = require("./games/modify.js");
 const deleteGame = require("./games/delete.js");
 const getOrders = require("./orders/get");
 const modifyOrder = require("./orders/modify");
+const getUsers = require("./users/get");
+const User = require("../../models/user");
+const modifyUser = require("./users/modify");
 
 adminRoutes.get("/orders", getOrders(Order), (req, res) => {
   res.json(res.result);
@@ -28,5 +31,8 @@ adminRoutes.delete("/packages/:id", deletePackage(Package));
 adminRoutes.post("/games", createGame(Game));
 adminRoutes.patch("/games/:id", modifyGame(Game));
 adminRoutes.delete("/games/:id", deleteGame(Game));
+
+adminRoutes.get("/users", getUsers(User));
+adminRoutes.patch("/users", modifyUser(User));
 
 module.exports = adminRoutes;

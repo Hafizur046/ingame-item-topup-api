@@ -4,8 +4,9 @@ let userSchema = new mongoose.Schema({
     type: Number,
     required: false,
   },
-  permission: {
+  privillage: {
     type: String,
+    default: "user",
     required: false,
   },
   joinedAt: {
@@ -42,6 +43,11 @@ let userSchema = new mongoose.Schema({
   fullName: {
     type: String,
     required: true,
+  },
+  isBlocked: {
+    type: Boolean,
+    default: false,
+    required: false,
   },
   orders: [{ type: Number, ref: "Order" }],
 });

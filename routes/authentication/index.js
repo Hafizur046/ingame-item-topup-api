@@ -10,6 +10,7 @@ const SendConfirmation = require("./sendConfirmation.js");
 const Verify = require("./verify.js");
 const RemoveToken = require("./removetoken.js");
 const Login = require("./login.js");
+const modifyUser = require("./modify.js");
 
 //Register Route
 authRoutes.post(
@@ -26,6 +27,9 @@ authRoutes.post("/login", Login(User), (req, res) => {
   console.log(("The fucking user is :", req.user));
   res.json({});
 });
+
+//password change route
+authRoutes.patch("/changepassword", modifyUser(User));
 
 //Resend email Route
 authRoutes.get("/resend", SendConfirmation(User), (req, res) => {

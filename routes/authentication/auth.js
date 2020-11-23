@@ -22,12 +22,10 @@ function Authenticate(Model) {
         }
         let id = userToken.userId;
         let user = await Model.findById(id);
-        console.log(user);
         if (user == null) {
           req.isValidUser = false;
           next();
         } else {
-          console.log("Request from :", user.fullName);
           req.isValidUser = true;
           req.user = user;
           next();
@@ -44,4 +42,3 @@ function Authenticate(Model) {
 }
 
 module.exports = Authenticate;
-

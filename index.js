@@ -8,35 +8,17 @@ const cors = require("cors");
 require("dotenv").config();
 
 //constants
-const PORT = 80;
+const PORT = process.env.PORT || 80;
 const DB_URI = process.env["DB_URI"];
-
-//bug fixing
-// console.log(DB_URI)
 
 //Initializing express app
 const app = express();
 
+//using the cors package to manasge all the shits about cors
 app.use(cors());
-
-app.options("/*", function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Content-Type, Authorization, Content-Length, X-Requested-With"
-  );
-  res.sendStatus(200);
-});
-
-app.all("*", function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  next();
-});
 
 //parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
-//app.use(express.json());
 // parse application/json
 app.use(bodyParser.json());
 
@@ -45,7 +27,6 @@ const User = require("./models/user.js");
 
 //Importing middlewares
 const Authenticate = require("./routes/authentication/auth.js");
-//const cors = require("./routes/cors.js");
 
 //Importing router
 const router = require("./routes/index.js");
@@ -56,6 +37,16 @@ let db = mongoose.connection;
 
 //Using coustom middlewares
 app.use(Authenticate(User));
+
+//not responding to all the users that are blocked
+app.use((req, res, next) => {
+  if (req.user) {
+    if (req.user.isBlocked) {
+      return;
+    }
+  }
+  next();
+});
 
 //Connected to database
 db.once("open", async (err) => {

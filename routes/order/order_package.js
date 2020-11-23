@@ -1,3 +1,5 @@
+const Package = require("../../models/package");
+
 function orderPackage(Order, User, IncreamentalId) {
   return async (req, res) => {
     const order = new Order();
@@ -9,21 +11,26 @@ function orderPackage(Order, User, IncreamentalId) {
     order.accountPlatform = req.body.accountPlatform;
     order.orderedBy = req.user._id;
     //order.email = req.body.email;
-    order.emailOrNumber = req.body.emailOrNumber;
-    order.password = req.body.password;
-    order.bkashNumber = req.body.bkashNumber;
+    let package = await Package.findById(req.body.package);
+    if (package.type !== "promo") {
+      order.emailOrNumber = req.body.emailOrNumber;
+      order.password = req.body.password;
+    } else {
+      order.playerId = req.body.playerId;
+    }
 
+    order.bkashNumber = req.body.bkashNumber;
     //validation
     if (order.validateSync()) {
       console.log(order.validateSync());
-      return res.send(order.validateSync());
+      return res.json({ err: order.validateSync()._message });
     }
     //console.log("this should be the order id ", INC_ID);
     order._id = await Order.countDocuments();
 
     try {
       let resOrder = await order.save();
-      res.send(
+      res.json(
         await User.findByIdAndUpdate(req.user._id, {
           $push: { orders: resOrder._id },
         })

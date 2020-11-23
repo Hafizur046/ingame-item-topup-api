@@ -6,6 +6,7 @@ function getOrderHistory(Model) {
     let endIndex = startIndex + limit;
     let result = {};
     // console.log('Page: ', page, 'Limit: ', limit, 'startIndex', startIndex, 'Endindex: ', endIndex)
+    console.log("this fucking users is", req.user);
 
     if (page > 1) {
       result.pre = {
