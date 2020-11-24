@@ -8,6 +8,8 @@ const Order = require("../../models/order");
 const getOrderHistory = require("./orderhistory");
 
 //managing all the routes
-userRoutes.get("/getorderhistory", getOrderHistory(Order));
+userRoutes.get("/getorderhistory", getOrderHistory(Order), (req, res) => {
+  res.json(res.result);
+});
 
 module.exports = userRoutes;

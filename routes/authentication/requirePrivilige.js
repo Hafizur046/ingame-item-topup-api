@@ -7,7 +7,7 @@ function requirePrivillage(privillage) {
       return;
     }
 
-    console.log("this is new yeah", req.User);
+    console.log("this is new yeah", req.user);
     res.status(401).json({ err: "unauthorized" });
   };
 }

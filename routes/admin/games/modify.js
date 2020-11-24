@@ -9,10 +9,6 @@ function modifyGame(Game) {
       game.image = req.body.image;
     }
 
-    console.log("the name:", req.body.name);
-    console.log("the iamge:", req.body.image);
-    console.log("the id:", req.params.id);
-
     await Game.updateOne({ _id: req.params.id }, game);
     res.json({});
   };

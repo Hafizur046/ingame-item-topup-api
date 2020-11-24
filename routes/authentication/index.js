@@ -16,7 +16,7 @@ const modifyUser = require("./modify.js");
 authRoutes.post(
   "/register",
   Register(User),
-  SendConfirmation(User),
+  //SendConfirmation(User),
   (req, res) => {
     res.json(req.user);
   }
@@ -24,7 +24,6 @@ authRoutes.post(
 
 //Login Route
 authRoutes.post("/login", Login(User), (req, res) => {
-  console.log(("The fucking user is :", req.user));
   res.json({});
 });
 
@@ -33,7 +32,7 @@ authRoutes.patch("/changepassword", modifyUser(User));
 
 //Resend email Route
 authRoutes.get("/resend", SendConfirmation(User), (req, res) => {
-  res.send("success");
+  res.json({});
 });
 
 //Email Confirmation route
@@ -41,7 +40,7 @@ authRoutes.get("/register/confirm/:code", Verify(), (req, res) => {});
 
 //Token remove route
 authRoutes.get("/token/remove", RemoveToken(User), (req, res) => {
-  res.send("success");
+  res.json({});
 });
 
 module.exports = authRoutes;

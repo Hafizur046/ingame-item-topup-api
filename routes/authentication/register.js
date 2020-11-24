@@ -1,75 +1,88 @@
 const bcrypt = require("bcryptjs");
-
-//const mongoose = require('mongoose');
-//const Token = require('../../models/jwt.js');
 const TokenHandler = require("./TokenHandler.js");
 
 function isValid(user) {
-  if (user.username) {
-    if (user.email) {
-      let parts = user.email.split("@");
-      let afterPart = parts[1].split(".");
-      if (
-        parts.length === 2 &&
-        afterPart.length === 2 &&
-        user.email.split("").length < 50
-      ) {
-        if (user.password) {
-          return true;
-        } else {
-          return false;
-        }
-      } else {
-        return false;
-      }
-    } else {
-      return false;
-    }
-  } else {
+  if (!user.username) {
     return false;
   }
+  if (!user.fullName) {
+    return false;
+  }
+  if (!user.email) {
+    return false;
+  }
+  let parts = user.email.split("@");
+  if (
+    parts.length !== 2 ||
+    parts.length !== 2 ||
+    user.email.split("").length > 50
+  ) {
+    return false;
+  }
+  if (!user.phone) {
+    return false;
+  }
+  if (user.phone.split("").length !== 11) {
+    return false;
+  }
+  if (!user.password) {
+    return false;
+  }
+  return true;
 }
 
 function Register(Model) {
   return async (req, res, next) => {
-    console.log(req.body);
-    if (isValid(req.body)) {
-      try {
-        let user = await Model.find({
-          $or: [{ username: req.body.username }, { email: req.body.email }],
-        }).exec();
-        console.log("Users with same :", user);
-        if (user.length > 0) {
-          console.log("email or username is taken");
-          console.log(user);
-          return res.json({ err: "email or username is taken" });
-        } else {
-          let thisUser = new Model();
-          thisUser.username = req.body.username;
-          let salt = bcrypt.genSaltSync(10);
-          let hashedPassword = bcrypt.hashSync(req.body.password, salt);
-          thisUser.password = hashedPassword;
-          thisUser.email = req.body.email;
-          thisUser.phone = req.body.phone;
-          thisUser.fullName = req.body.fullName;
-          thisUser._id = Number(await Model.countDocuments());
+    if (!isValid(req.body)) {
+      res.json({ err: "Provide all fields" });
+      return;
+    }
+    try {
+      //querry the user Model using the provided email and password
+      let user = await Model.find({
+        $or: [{ username: req.body.username }, { email: req.body.email }],
+      }).exec();
 
-          req.user = await thisUser.save();
-          let userToken = new TokenHandler();
-          let token = await userToken.getToken(req.user._id);
-          res.setHeader("id", userToken.id);
-          res.setHeader("key", userToken.key);
-          //return next();
-          res.json({ id: userToken.id, key: userToken.key });
-        }
-      } catch (error) {
-        console.log(error);
-        res.status(400);
-        res.json({ err: "Something went wrong" });
+      //if any user exist by this given username or email then return;
+      if (user.length !== 0) {
+        res.json({ err: "email or username is taken" });
+        return;
       }
-    } else {
-      // next();
-      return res.json({ err: "Provide all fields" });
+
+      //create a new instance of User Model;
+      let thisUser = new Model();
+
+      //set all the values from req body to the instance of User
+      thisUser.username = req.body.username;
+
+      //hash the password from req.body and store it
+      let salt = bcrypt.genSaltSync(10);
+      let hashedPassword = bcrypt.hashSync(req.body.password, salt);
+      thisUser.password = hashedPassword;
+
+      //continue
+      thisUser.email = req.body.email;
+      thisUser.phone = req.body.phone;
+      thisUser.fullName = req.body.fullName;
+      //this is a messy solution to a fucking problem that I made
+      thisUser._id = Number(await Model.countDocuments());
+
+      //call the save method of the new instance of User Model;
+      await thisUser.save();
+
+      //generate a token for this user and set them on response header
+      //initiate
+      let userToken = new TokenHandler();
+      //call getToken method
+      await userToken.getToken(req.user._id);
+      //set id and key to response header
+      res.setHeader("id", userToken.id);
+      res.setHeader("key", userToken.key);
+
+      //also send the id and key as response body
+      res.json({ id: userToken.id, key: userToken.key });
+    } catch (error) {
+      console.log(error);
     }
   };
 }
