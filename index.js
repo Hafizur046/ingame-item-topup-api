@@ -3,9 +3,17 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const webPush = require("web-push");
 
 //configuring enivorent variables
 require("dotenv").config();
+
+//setting vapid details
+webPush.setVapidDetails(
+  "mailto:test@test.com",
+  process.env.PUBLIC_VAPID_KEY,
+  process.env.PRIVATE_VAPID_KEY
+);
 
 //constants
 const PORT = process.env.PORT || 80;

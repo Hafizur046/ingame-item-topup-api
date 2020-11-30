@@ -4,6 +4,9 @@ function createPackage(Package) {
     package.name = req.body.name;
     package.price = req.body.price;
     package.game = req.body.game;
+    if (req.body.catagory) {
+      package.catagory = req.body.catagory;
+    }
 
     //validating package
     if (package.validateSync()) {
@@ -13,10 +16,11 @@ function createPackage(Package) {
 
     //save package and respond
     try {
-      const response = await package.save();
-      res.send(response);
+      await package.save();
+      res.json({});
     } catch (err) {
       console.log(err);
+      res.json({ err: "ops some fucking error has occured" });
     }
   };
 }
