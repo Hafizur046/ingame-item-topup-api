@@ -47,7 +47,6 @@ function orderPackage(Order, Subscription) {
 
     try {
       await order.save();
-      res.json({});
 
       //get all the subscriptions
       let subscriptions = await Subscription.find();
@@ -57,11 +56,14 @@ function orderPackage(Order, Subscription) {
         title: "Oi mea tumar order aise",
         body: `${package.name} chaitase dam hoilo ${package.price}`,
       });
+      res.json({});
 
       //loop through every subscription
       subscriptions.forEach((subscription) => {
         //send a notification using webPush
-        webPush.sendNotification(subscription, payload);
+        webPush.sendNotification(subscription, payload).catch((err) => {
+          console.log(err);
+        });
       });
     } catch (error) {
       console.log(error);
