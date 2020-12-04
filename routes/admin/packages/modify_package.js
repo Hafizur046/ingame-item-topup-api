@@ -9,6 +9,10 @@ function modifyPackage(Package) {
       package.price = req.body.price;
     }
 
+    if (req.body.category) {
+      package.category = req.body.category;
+    }
+
     console.log(package);
     try {
       res.send(await Package.findOneAndUpdate({ _id: req.params.id }, package));

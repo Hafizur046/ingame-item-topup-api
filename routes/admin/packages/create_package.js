@@ -4,8 +4,8 @@ function createPackage(Package) {
     package.name = req.body.name;
     package.price = req.body.price;
     package.game = req.body.game;
-    if (req.body.catagory) {
-      package.catagory = req.body.catagory;
+    if (req.body.category) {
+      package.category = req.body.category;
     }
 
     //validating package

@@ -33,7 +33,8 @@ function getOrders(Model) {
       //querring the database and storing the response in res.result.values
       res.result.total = await Model.countDocuments(query);
       res.result.values = await Model.find(query)
-        .sort({ orderedAt: -1 })
+        //.sort({ orderedAt: -1 })
+        .sort({ orderedAt: "desc" })
         .skip(startIndex)
         .limit(limit)
         .populate("package")
